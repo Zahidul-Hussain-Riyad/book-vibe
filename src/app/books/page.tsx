@@ -64,15 +64,19 @@ import BookCard from "@/components/shared/BookCard";
 import { IBook } from "@/types/books.type";
 
 const getBooks = async (): Promise<IBook[]> => {
-    const response = await fetch("http://localhost:3000/booksData.json");
+    try {
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/booksData.json`
+        );
 
-    if (!response.ok) {
-        throw new Error("Failed to fetch books data");
+        if (!response.ok) {
+            throw new Error("Failed to fetch books data");
+        }
+
+        const data: IBook[] = await response.json();
+
+        return data;
     }
-
-    const data: IBook[] = await response.json();
-
-    return data;
 };
 
 const Books = async () => {
@@ -98,7 +102,7 @@ const Books = async () => {
                 ))}
             </div>
 
-            <WishListButton book={book}/>
+            <WishListButton book={book} />
 
         </section>
     );
